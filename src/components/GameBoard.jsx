@@ -13,7 +13,7 @@ const GameBoard = ({ onGameComplete }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
 
-  const MAX_ROUNDS = 20;
+  const MAX_ROUNDS = 30; // Increased for more accurate rankings
 
   useEffect(() => {
     initializeGame();
@@ -67,8 +67,13 @@ const GameBoard = ({ onGameComplete }) => {
     const winner = selectedSuburb;
     const loser = winner.id === suburbA.id ? suburbB : suburbA;
 
-    // Update ratings
-    const { winnerRating, loserRating } = updateRatings(winner.rating, loser.rating);
+    // Update ratings with match history for more accurate results
+    const { winnerRating, loserRating } = updateRatings(
+      winner.rating,
+      loser.rating,
+      winner.matches,
+      loser.matches
+    );
 
     // Update suburbs state
     setSuburbs(prevSuburbs =>

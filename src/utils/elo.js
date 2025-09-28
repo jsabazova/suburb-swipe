@@ -1,6 +1,7 @@
 // Elo rating system for suburb rankings
 // K-factor determines how much ratings change after each match
-const K_FACTOR = 32;
+// Higher K-factor = more dramatic rating changes per match
+const K_FACTOR = 50; // Increased from 32 for more responsive ratings
 
 /**
  * Calculate expected score for player A against player B
@@ -13,17 +14,29 @@ function getExpectedScore(ratingA, ratingB) {
 }
 
 /**
- * Update Elo ratings after a match
+ * Update Elo ratings after a match with adaptive K-factor
  * @param {number} winnerRating - Current rating of the winner
  * @param {number} loserRating - Current rating of the loser
+ * @param {number} winnerMatches - Number of matches winner has played
+ * @param {number} loserMatches - Number of matches loser has played
  * @returns {Object} New ratings for both players
  */
-export function updateRatings(winnerRating, loserRating) {
+export function updateRatings(winnerRating, loserRating, winnerMatches = 0, loserMatches = 0) {
   const expectedWinner = getExpectedScore(winnerRating, loserRating);
   const expectedLoser = getExpectedScore(loserRating, winnerRating);
 
-  const newWinnerRating = Math.round(winnerRating + K_FACTOR * (1 - expectedWinner));
-  const newLoserRating = Math.round(loserRating + K_FACTOR * (0 - expectedLoser));
+  // Adaptive K-factor: higher for fewer matches (more volatile early game)
+  const getKFactor = (matches) => {
+    if (matches < 5) return 60;  // Very responsive for first few matches
+    if (matches < 10) return 45; // Still responsive
+    return K_FACTOR; // Standard after 10+ matches
+  };
+
+  const winnerK = getKFactor(winnerMatches);
+  const loserK = getKFactor(loserMatches);
+
+  const newWinnerRating = Math.round(winnerRating + winnerK * (1 - expectedWinner));
+  const newLoserRating = Math.round(loserRating + loserK * (0 - expectedLoser));
 
   return {
     winnerRating: newWinnerRating,

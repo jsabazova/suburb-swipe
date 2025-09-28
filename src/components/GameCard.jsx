@@ -82,9 +82,15 @@ const GameCard = ({ suburb, onSelect, isLeft, isAnimating }) => {
             <h3 className="text-2xl font-bold text-gray-900 mb-2">
               {suburb.name}
             </h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
+            <p className="text-gray-600 text-sm leading-relaxed mb-3">
               {suburb.description}
             </p>
+
+            {/* Rating Display */}
+            <div className="flex items-center justify-between text-xs text-gray-500">
+              <span>Rating: {suburb.rating || 1200}</span>
+              <span>Matches: {suburb.matches || 0}</span>
+            </div>
           </div>
 
           {/* Visual Click Hint */}
