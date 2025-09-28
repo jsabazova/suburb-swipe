@@ -127,7 +127,7 @@ const GameBoard = ({ onGameComplete }) => {
             Suburb Swipe
           </h1>
           <p className="text-lg text-gray-600 mb-8">
-            Choose your favorite between two Melbourne suburbs.
+            Choose your favorite between two Melbourne suburbs from our collection of {suburbs.length} locations.
             After {MAX_ROUNDS} rounds, we'll show your Top 10!
           </p>
           <motion.button
